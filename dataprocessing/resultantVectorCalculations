@@ -1,0 +1,65 @@
+import math
+import pandas as pd
+import numpy as np
+#Insert .csv location the same way as in the graphing program
+data= pd.read_csv()
+
+#This code works, but I may have made some mistakes in the calculations. Will confirm at some point after I get proper data from the IMU.
+
+#Code below is basic code used to test trig functions. 90 is the angle in degrees which math.radians() converts into radians which can be used for math.sin(). If the IMU gives radians for the angle, remove math.radians.
+#print(math.sin(math.radians(90)))
+
+#General Formulae (a1,a2,a3 are angles. x1,y1,z1 are unproccesed vectors. x2... are partially processed and x3... is fully processed)
+#x3 = ( x1 * cos(a1) - y1 * sin(a1) ) * cos(a2) - z1*sin(a2) where a3 is the axis of rotation that does not affect the x1 vector
+#y3 = ( y1 * cos(a1) - x1 * sin(a1) ) * cos(a3) - z1*sin(a3) where a2 is the axis of rotation that does not affect the y1 vector
+#z3 = ( z1 * cos(a2) - x1 * sin(a2) ) * cos(a3) - y1*sin(a3) where a1 is the axis of rotation that does not affect the z1 vector
+
+#Note: Depending on how the angles are recorded, the process may have be changed.
+
+#Comments below are used to test the calculations.
+#x1=2
+#y1=3
+#z1=4
+#a1=45
+#a2=30
+#a3=60
+#Calculations for angles given as radians
+#print("x3=", ( x1 * math.cos(a1) - y1 * math.sin(a1) ) * math.cos(a2) - z1 * math.sin(a2))
+#print("y3=", ( y1 * math.cos(a1) - x1 * math.sin(a1) ) * math.cos(a3) - z1* math.sin(a3))
+#print("z3=", ( z1 * math.cos(a2) - x1 * math.sin(a2) ) * math.cos(a3) - y1* math.sin(a3))
+#Calculations for angles given as degrees
+#print("x3=", ( x1 * math.cos(math.radians(a1)) - y1 * math.sin(math.radians(a1)) ) * math.cos(math.radians(a2)) - z1 * math.sin(math.radians(a2)))
+#print("y3=", ( y1 * math.cos(math.radians(a1)) - x1 * math.sin(math.radians(a1)) ) * math.cos(math.radians(a3)) - z1* math.sin(math.radians(a3)))
+#print("z3=", ( z1 * math.cos(math.radians(a2)) - x1 * math.sin(math.radians(a2)) ) * math.cos(math.radians(a3)) - y1* math.sin(math.radians(a3)))
+
+#Line below prints column names. Line below that prints all the times and X-axis accelerations.
+#print(data.columns)
+#print(data.Time,data.X_Acceleration)
+
+# Show the first few rows of the data to understand its structure
+print(data.head())
+
+#Converts to numeric values
+data['a1'] = pd.to_numeric(data['a1'], errors='coerce')
+data['a2'] = pd.to_numeric(data['a2'], errors='coerce')
+data['a3'] = pd.to_numeric(data['a3'], errors='coerce')
+#Checks data for non-numeric values
+if data['a1'].isnull().values.any() or data['a2'].isnull().values.any() or data['a3'].isnull().values.any():
+    print("Warning: There are non-numeric values in the columns.")
+
+#Finds X resultant vector
+result = (data['X_Acceleration'] * np.cos(data['a1']) - data['Y_Acceleration']*np.sin(data['a1'])) * np.cos(data['a2']) - data['Z_Acceleration']*np.sin(data['a2'])
+#Creates new column
+data['Resultant_X_Acceleration'] = result
+
+#Finds Y resultant vector
+result = (data['Y_Acceleration'] * np.cos(data['a1']) - data['X_Acceleration']*np.sin(data['a1'])) * np.cos(data['a3']) - data['Z_Acceleration']*np.sin(data['a3'])
+#Creates new column
+data['Resultant_Y_Acceleration'] = result
+
+#Finds Z resultant vector
+result = (data['Z_Acceleration'] * np.cos(data['a2']) - data['X_Acceleration']*np.sin(data['a2'])) * np.cos(data['a3']) - data['Y_Acceleration']*np.sin(data['a3'])
+#Creates new column
+data['Resultant_Z_Acceleration'] = result
+
+print(data)
