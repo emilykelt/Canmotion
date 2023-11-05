@@ -35,10 +35,10 @@ while True:
     time_count += 1
 
     print(str(time_count),
-          "CANMOTION T:{:.2f} P: {:.0f} ADC-T:{:5.2f}".format(temperature, pressure, adc_temp))
+          "CANMOTION T:{:.2f} P: {:.0f} ADC:{:5.2f}".format(temperature, pressure, adc_temp))
 
     radio.send(str(time_count) +
-               "CANMOTION T:{:.2f} P: {:.0f} ADC-T:{:5.2f}".format(temperature, pressure, adc_temp))
+               "CANMOTION T:{:.2f} P: {:.0f} ADC:{:5.2f}".format(temperature, pressure, adc_temp))
 
     time.sleep(1)   # TODO - look at cansat spec and see if it needs changed
 
