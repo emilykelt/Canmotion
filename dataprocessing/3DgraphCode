@@ -1,0 +1,32 @@
+import io
+import pandas as pd
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+#This code creates a 3D graph.
+
+#NOTE: THIS CODE USES THE RESOLVED ACCELERATIONS BY DEFAULT; SEE THE LINE PLOT SECTION.
+#example.csv MUST BE RUN THROUGH THE VECTOR RESOLUTION CODE FOR THIS TO WORK.
+#ALTERNATIVELY, YOU CAN PUT THE LINE PLOT - TAKE LINE C CODE OUT OF COMMENTS AND PUT THE OTHERS INTO COMMENTS.
+#FOR THIS CODE TO PLOT THE TRAJECTORY, USE LINE A. FOR THIS, DISPLACEMENT CALCULATIONS NEED TO BE DONE.
+
+# Read data from a CSV file
+file_path = 'C:/Users/username/Desktop/example.csv'  # Replace with the path to your CSV file
+df = pd.read_csv(file_path)
+
+# Create a 3D plot
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+# Line plot
+#LINE A - DISPLACEMENT (CODE NEEDS TO BE MADE FOR TO FIND DISPLACEMENT)
+ax.plot(df['Resolved_X_Acceleration'], df['Resolved_Y_Acceleration'], df['Resolved_Z_Acceleration'], c='r', marker='o') #LINE B - RESOLVED ACCELERATION (MUST RUN THROUGH VECTOR RESOLUTION CODE)
+#ax.plot(df['X_Acceleration'], df['Y_Acceleration'], df['Z_Acceleration'], c='r', marker='o') #LINE C
+
+# Set labels (NOTE: CHECK LABELS ARE CORRECT FOR THE GRAPH YOU ARE PLOTTING)
+ax.set_xlabel('X Acceleration')
+ax.set_ylabel('Y Acceleration')
+ax.set_zlabel('Z Acceleration')
+
+# Show the plot
+plt.show()
