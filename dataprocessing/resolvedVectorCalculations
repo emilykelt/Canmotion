@@ -2,7 +2,7 @@ import math
 import pandas as pd
 import numpy as np
 #Insert .csv location the same way as in the graphing program
-data= pd.read_csv()
+data= pd.read_csv(r'')
 
 #This code works, but I may have made some mistakes in the calculations. Will confirm at some point after I get proper data from the IMU.
 
@@ -47,19 +47,23 @@ data['a3'] = pd.to_numeric(data['a3'], errors='coerce')
 if data['a1'].isnull().values.any() or data['a2'].isnull().values.any() or data['a3'].isnull().values.any():
     print("Warning: There are non-numeric values in the columns.")
 
-#Finds X resultant vector
+#Finds X resolved vector
 result = (data['X_Acceleration'] * np.cos(data['a1']) - data['Y_Acceleration']*np.sin(data['a1'])) * np.cos(data['a2']) - data['Z_Acceleration']*np.sin(data['a2'])
 #Creates new column
-data['Resultant_X_Acceleration'] = result
+data['Resolved_X_Acceleration'] = result
 
-#Finds Y resultant vector
+#Finds Y resolved vector
 result = (data['Y_Acceleration'] * np.cos(data['a1']) - data['X_Acceleration']*np.sin(data['a1'])) * np.cos(data['a3']) - data['Z_Acceleration']*np.sin(data['a3'])
 #Creates new column
-data['Resultant_Y_Acceleration'] = result
+data['Resolved_Y_Acceleration'] = result
 
-#Finds Z resultant vector
+#Finds Z resolved vector
 result = (data['Z_Acceleration'] * np.cos(data['a2']) - data['X_Acceleration']*np.sin(data['a2'])) * np.cos(data['a3']) - data['Y_Acceleration']*np.sin(data['a3'])
 #Creates new column
-data['Resultant_Z_Acceleration'] = result
+data['Resolved_Z_Acceleration'] = result
 
+#Prints the table with calculated values
 print(data)
+
+#Saves the modified .csv file in the same location as the code
+data.to_csv('output_data.csv', index=False)
