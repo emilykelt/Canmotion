@@ -1,401 +1,402 @@
 #Note: this code requires data to be in a .csv file. The file I used to test it has a directory 'C:/Users/qwert/Desktop/example.csv'. The file used to test the code exists on the GitHub.
 #Below is a list of lines which need to have the file directory replaced. 
 #Ln's: 14, 52, 66 + 67, 100 + 101, 134 + 135, 182 + 183, 209 + 210, 236 + 237, 246, 383 (May change if more lines are added.)
-import math
-import pandas as pd
-import numpy as np
-import io
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+def graphCode():
+    import math
+    import pandas as pd
+    import numpy as np
+    import io
+    import matplotlib.pyplot as plt
+    from mpl_toolkits.mplot3d import Axes3D
 
-#VECTOR RESOLUTION v ------------------------------------------------------------------------
-
-#Insert .csv location the same way as in the graphing program
-data= pd.read_csv(r'C:/Users/qwert/Desktop/example.csv')
-
-#See the specific page on the GitHub for more information on this code, especially using radians/degrees for angles.
-
-#Line below prints column names. Line below that prints all the times and X-axis accelerations.
-print(data.columns)
-print(data.Time,data.X_Acceleration)
-
-# Show the first few rows of the data to understand its structure
-print(data.head())
-
-#Converts to numeric values
-data['a1'] = pd.to_numeric(data['a1'], errors='coerce')
-data['a2'] = pd.to_numeric(data['a2'], errors='coerce')
-data['a3'] = pd.to_numeric(data['a3'], errors='coerce')
-#Checks data for non-numeric values
-if data['a1'].isnull().values.any() or data['a2'].isnull().values.any() or data['a3'].isnull().values.any():
-    print("Warning: There are non-numeric values in the columns.")
-
-#Finds X resolved vector
-result = (data['X_Acceleration'] * np.cos(data['a1']) - data['Y_Acceleration']*np.sin(data['a1'])) * np.cos(data['a2']) - data['Z_Acceleration']*np.sin(data['a2'])
-#Creates new column
-data['Resolved_X_Acceleration'] = result
-
-#Finds Y resolved vector
-result = (data['Y_Acceleration'] * np.cos(data['a1']) - data['X_Acceleration']*np.sin(data['a1'])) * np.cos(data['a3']) - data['Z_Acceleration']*np.sin(data['a3'])
-#Creates new column
-data['Resolved_Y_Acceleration'] = result
-
-#Finds Z resolved vector
-result = (data['Z_Acceleration'] * np.cos(data['a2']) - data['X_Acceleration']*np.sin(data['a2'])) * np.cos(data['a3']) - data['Y_Acceleration']*np.sin(data['a3'])
-#Creates new column
-data['Resolved_Z_Acceleration'] = result
-
-#Prints the table with calculated values
-print(data)
-
-#Saves the modified .csv file in the same location as the code
-data.to_csv('C:/Users/qwert/Desktop/example.csv', index=False)
-
-#VECTOR RESOLUTION ^ --------------------------------------------------------------------------
-#VELOCITY CALCULATIONS v --------------------------------------------------------------------------
-#VELOCITY X --------------------------------------------------------------------------
-def calculate_velocityX(accelerations):
-    velocities = [0]  # Initial velocity is assumed to be 0
-    for accel in accelerations:
-        VelocityX = velocities[-1] + accel
-        velocities.append(VelocityX)
-    return velocities[1:]  # Exclude the initial velocity
-
-def main():
-    # Replace 'inputFile.csv' and 'outputFile.csv' with your actual file paths
-    input_file_path = 'C:/Users/qwert/Desktop/example.csv'
-    output_file_path = 'C:/Users/qwert/Desktop/example.csv'
-
-    # Read accelerations from CSV
-    df = pd.read_csv(input_file_path)
-    accelerations = df['Resolved_X_Acceleration'].tolist()
-
-    # Calculate velocities
-    velocities = calculate_velocityX(accelerations)
+    #VECTOR RESOLUTION v ------------------------------------------------------------------------
     
-    # Add a new 'velocity' column to the DataFrame with NaN values
-    df['VelocityX'] = [float('nan')] * len(df)
+    #Insert .csv location the same way as in the graphing program
+    data= pd.read_csv(r'C:/Users/qwert/Desktop/example.csv')
     
-    # Fill the first row of the 'velocity' column with 0
-    df.at[0, 'VelocityX'] = 0
-
-    # Fill the 'velocity' column with calculated velocities starting from the second row
-    df['VelocityX'] = [0] + velocities[:len(df)-1]
-
-    # Write the updated DataFrame back to CSV
-    df.to_csv(output_file_path, index=False)
-
-if __name__ == "__main__":
-    main()
-#VELOCITY Y --------------------------------------------------------------------------
-def calculate_velocityY(accelerations):
-    velocities = [0]  # Initial velocity is assumed to be 0
-    for accel in accelerations:
-        VelocityY = velocities[-1] + accel
-        velocities.append(VelocityY)
-    return velocities[1:]  # Exclude the initial velocity
-
-def main():
-    # Replace 'inputFile.csv' and 'outputFile.csv' with your actual file paths
-    input_file_path = 'C:/Users/qwert/Desktop/example.csv'
-    output_file_path = 'C:/Users/qwert/Desktop/example.csv'
-
-    # Read accelerations from CSV
-    df = pd.read_csv(input_file_path)
-    accelerations = df['Resolved_Y_Acceleration'].tolist()
-
-    # Calculate velocities
-    velocities = calculate_velocityY(accelerations)
+    #See the specific page on the GitHub for more information on this code, especially using radians/degrees for angles.
     
-    # Add a new 'velocity' column to the DataFrame with NaN values
-    df['VelocityY'] = [float('nan')] * len(df)
+    #Line below prints column names. Line below that prints all the times and X-axis accelerations.
+    print(data.columns)
+    print(data.Time,data.X_Acceleration)
     
-    # Fill the first row of the 'velocity' column with 0
-    df.at[0, 'VelocityY'] = 0
-
-    # Fill the 'velocity' column with calculated velocities starting from the second row
-    df['VelocityY'] = [0] + velocities[:len(df)-1]
-
-    # Write the updated DataFrame back to CSV
-    df.to_csv(output_file_path, index=False)
-
-if __name__ == "__main__":
-    main()
-#VELOCITY Z --------------------------------------------------------------------------
-def calculate_velocityZ(accelerations):
-    velocities = [0]  # Initial velocity is assumed to be 0
-    for accel in accelerations:
-        VelocityZ = velocities[-1] + accel
-        velocities.append(VelocityZ)
-    return velocities[1:]  # Exclude the initial velocity
-
-def main():
-    # Replace 'inputFile.csv' and 'outputFile.csv' with your actual file paths
-    input_file_path = 'C:/Users/qwert/Desktop/example.csv'
-    output_file_path = 'C:/Users/qwert/Desktop/example.csv'
-
-    # Read accelerations from CSV
-    df = pd.read_csv(input_file_path)
-    accelerations = df['Resolved_Z_Acceleration'].tolist()
-
-    # Calculate velocities
-    velocities = calculate_velocityZ(accelerations)
+    # Show the first few rows of the data to understand its structure
+    print(data.head())
     
-    # Add a new 'velocity' column to the DataFrame with NaN values
-    df['VelocityZ'] = [float('nan')] * len(df)
+    #Converts to numeric values
+    data['a1'] = pd.to_numeric(data['a1'], errors='coerce')
+    data['a2'] = pd.to_numeric(data['a2'], errors='coerce')
+    data['a3'] = pd.to_numeric(data['a3'], errors='coerce')
+    #Checks data for non-numeric values
+    if data['a1'].isnull().values.any() or data['a2'].isnull().values.any() or data['a3'].isnull().values.any():
+        print("Warning: There are non-numeric values in the columns.")
     
-    # Fill the first row of the 'velocity' column with 0
-    df.at[0, 'VelocityZ'] = 0
-
-    # Fill the 'velocity' column with calculated velocities starting from the second row
-    df['VelocityZ'] = [0] + velocities[:len(df)-1]
-
-    # Write the updated DataFrame back to CSV
-    df.to_csv(output_file_path, index=False)
-
-if __name__ == "__main__":
-    main()
-
-#VELOCITY CALCULATIONS ^ --------------------------------------------------------------------------
-#DISPLACEMENT CALCULATIONS v --------------------------------------------------------------------------
-#DisplacementX --------------------------------------------------------------------------
-
-def calculate_displacement(acceleration, velocity, time_interval, previous_displacement):
-    displacement = previous_displacement + velocity * time_interval + 0.5 * acceleration * (time_interval ** 2)
-    return displacement
-
-def add_displacement_column(input_csv, output_csv, time_interval):
-    # Read the CSV file into a DataFrame
-    df = pd.read_csv(input_csv)
-
-    # Initialize the first displacement as the initial value in the 'Displacement' column
-    df['DisplacementX'] = df['VelocityX'] * time_interval + 0.5 * df['Resolved_X_Acceleration'] * (time_interval ** 2)
-
-    # Calculate and accumulate displacements based on 'Acceleration' and 'Velocity' columns
-    for i in range(1, len(df)):
-        df.loc[i, 'DisplacementX'] = calculate_displacement(df.loc[i, 'Resolved_X_Acceleration'], df.loc[i, 'VelocityX'], time_interval, df.loc[i - 1, 'DisplacementX'])
-
-    # Save the DataFrame with the new 'Displacement' column to a new CSV file
-    df.to_csv(output_csv, index=False)
-
-# Example usage
-input_csv_file = 'C:/Users/qwert/Desktop/example.csv'  # Replace with actual input CSV file directory
-output_csv_file = 'C:/Users/qwert/Desktop/example.csv' # Replace with actual output CSV file directory
-time_interval_seconds = 1  # Replace with the actual time interval in seconds
-
-add_displacement_column(input_csv_file, output_csv_file, time_interval_seconds)
-
-#DisplacementY --------------------------------------------------------------------------
-
-def calculate_displacement(acceleration, velocity, time_interval, previous_displacement):
-    displacement = previous_displacement + velocity * time_interval + 0.5 * acceleration * (time_interval ** 2)
-    return displacement
-
-def add_displacement_column(input_csv, output_csv, time_interval):
-    # Read the CSV file into a DataFrame
-    df = pd.read_csv(input_csv)
-
-    # Initialize the first displacement as the initial value in the 'Displacement' column
-    df['DisplacementY'] = df['VelocityY'] * time_interval + 0.5 * df['Resolved_Y_Acceleration'] * (time_interval ** 2)
-
-    # Calculate and accumulate displacements based on 'Acceleration' and 'Velocity' columns
-    for i in range(1, len(df)):
-        df.loc[i, 'DisplacementY'] = calculate_displacement(df.loc[i, 'Resolved_Y_Acceleration'], df.loc[i, 'VelocityY'], time_interval, df.loc[i - 1, 'DisplacementY'])
-
-    # Save the DataFrame with the new 'Displacement' column to a new CSV file
-    df.to_csv(output_csv, index=False)
-
-# Example usage
-input_csv_file = 'C:/Users/qwert/Desktop/example.csv'  # Replace with actual input CSV file directory
-output_csv_file = 'C:/Users/qwert/Desktop/example.csv' # Replace with actual output CSV file directory
-time_interval_seconds = 1  # Replace with the actual time interval in seconds
-
-add_displacement_column(input_csv_file, output_csv_file, time_interval_seconds)
-
-#DisplacementZ --------------------------------------------------------------------------
-
-def calculate_displacement(acceleration, velocity, time_interval, previous_displacement):
-    displacement = previous_displacement + velocity * time_interval + 0.5 * acceleration * (time_interval ** 2)
-    return displacement
-
-def add_displacement_column(input_csv, output_csv, time_interval):
-    # Read the CSV file into a DataFrame
-    df = pd.read_csv(input_csv)
-
-    # Initialize the first displacement as the initial value in the 'Displacement' column
-    df['DisplacementZ'] = df['VelocityZ'] * time_interval + 0.5 * df['Resolved_Z_Acceleration'] * (time_interval ** 2)
-
-    # Calculate and accumulate displacements based on 'Acceleration' and 'Velocity' columns
-    for i in range(1, len(df)):
-        df.loc[i, 'DisplacementZ'] = calculate_displacement(df.loc[i, 'Resolved_Z_Acceleration'], df.loc[i, 'VelocityZ'], time_interval, df.loc[i - 1, 'DisplacementZ'])
-
-    # Save the DataFrame with the new 'Displacement' column to a new CSV file
-    df.to_csv(output_csv, index=False)
-
-# Example usage
-input_csv_file = 'C:/Users/qwert/Desktop/example.csv'  # Replace with actual input CSV file directory
-output_csv_file = 'C:/Users/qwert/Desktop/example.csv' # Replace with actual output CSV file directory
-time_interval_seconds = 1  # Replace with the actual time interval in seconds
-
-add_displacement_column(input_csv_file, output_csv_file, time_interval_seconds)
-
-#DISPLACEMENT CALCULATIONS ^ --------------------------------------------------------------------------
-#2D GRAPH CODE v --------------------------------------------------------------------------
-
-#table_1 = pd.read_csv(r'C:/Users/username/Desktop/example.csv')
-table_1 = pd.read_csv(r'C:/Users/qwert/Desktop/example.csv')
-
-# Get the headers
-print(table_1.head())
-
-# Convert values to numpy arrays to graph
-x = table_1['Time'].to_numpy()
-y = table_1['Resolved_X_Acceleration'].to_numpy()
-# Graph dimensions
-xmin = x.min()
-xmax = x.max()
-ymin = y.min() - 5
-ymax = y.max() + 5
-
-fig, ax = plt.subplots()
-plt.axis([xmin,xmax,ymin,ymax]) # window size
-plt.plot([xmin,xmax],[0,0],'b') # blue x axis
-plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
-plt.plot(x,y) # make it scatterplot or line graph. (x,y,ro) for scattergraph
-
-y = table_1['Resolved_Y_Acceleration'].to_numpy()
-
-xmin = x.min()
-xmax = x.max()
-ymin = y.min() - 5
-ymax = y.max() + 5
-
-fig, ax = plt.subplots()
-plt.axis([xmin,xmax,ymin,ymax]) # window size
-plt.plot([xmin,xmax],[0,0],'b') # blue x axis
-plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
-plt.plot(x,y,color='red') # make it scatterplot or line graph. (x,y,ro) for scattergraph
-
-y = table_1['Resolved_Y_Acceleration'].to_numpy()
-
-xmin = x.min()
-xmax = x.max()
-ymin = y.min() - 5
-ymax = y.max() + 5
-
-fig, ax = plt.subplots()
-plt.axis([xmin,xmax,ymin,ymax]) # window size
-plt.plot([xmin,xmax],[0,0],'b') # blue x axis
-plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
-plt.plot(x,y,color='green') # make it scatterplot or line graph. (x,y,ro) for scattergraph
-
-y = table_1['VelocityX'].to_numpy()
-
-xmin = x.min()
-xmax = x.max()
-ymin = y.min() - 5
-ymax = y.max() + 5
-
-fig, ax = plt.subplots()
-plt.axis([xmin,xmax,ymin,ymax]) # window size
-plt.plot([xmin,xmax],[0,0],'b') # blue x axis
-plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
-plt.plot(x,y,color='darkred') # make it scatterplot or line graph. (x,y,ro) for scattergraph
-
-y = table_1['VelocityY'].to_numpy()
-
-xmin = x.min()
-xmax = x.max()
-ymin = y.min() - 5
-ymax = y.max() + 5
-
-fig, ax = plt.subplots()
-plt.axis([xmin,xmax,ymin,ymax]) # window size
-plt.plot([xmin,xmax],[0,0],'b') # blue x axis
-plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
-plt.plot(x,y,color='darkblue') # make it scatterplot or line graph. (x,y,ro) for scattergraph
-
-y = table_1['VelocityZ'].to_numpy()
-
-xmin = x.min()
-xmax = x.max()
-ymin = y.min() - 5
-ymax = y.max() + 5
-
-fig, ax = plt.subplots()
-plt.axis([xmin,xmax,ymin,ymax]) # window size
-plt.plot([xmin,xmax],[0,0],'b') # blue x axis
-plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
-plt.plot(x,y,color='darkgreen') # make it scatterplot or line graph. (x,y,ro) for scattergraph
-
-y = table_1['DisplacementX'].to_numpy()
-
-xmin = x.min()
-xmax = x.max()
-ymin = y.min() - 5
-ymax = y.max() + 5
-
-fig, ax = plt.subplots()
-plt.axis([xmin,xmax,ymin,ymax]) # window size
-plt.plot([xmin,xmax],[0,0],'b') # blue x axis
-plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
-plt.plot(x,y,color='lightcoral') # make it scatterplot or line graph. (x,y,ro) for scattergraph
-
-y = table_1['DisplacementY'].to_numpy()
-
-xmin = x.min()
-xmax = x.max()
-ymin = y.min() - 5
-ymax = y.max() + 5
-
-fig, ax = plt.subplots()
-plt.axis([xmin,xmax,ymin,ymax]) # window size
-plt.plot([xmin,xmax],[0,0],'b') # blue x axis
-plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
-plt.plot(x,y,color='lightseagreen') # make it scatterplot or line graph. (x,y,ro) for scattergraph
-
-y = table_1['DisplacementZ'].to_numpy()
-
-xmin = x.min()
-xmax = x.max()
-ymin = y.min() - 5
-ymax = y.max() + 5
-
-fig, ax = plt.subplots()
-plt.axis([xmin,xmax,ymin,ymax]) # window size
-plt.plot([xmin,xmax],[0,0],'b') # blue x axis
-plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
-plt.plot(x,y,color='darkviolet') # make it scatterplot or line graph. (x,y,ro) for scattergraph
-
-plt.show()
-
-#2D GRAPH CODE ^ --------------------------------------------------------------------------
-#3D GRAPH CODE v --------------------------------------------------------------------------
-
-#This code creates a 3D graph.
-
-#NOTE: THIS CODE USES THE RESOLVED ACCELERATIONS BY DEFAULT; SEE THE LINE PLOT SECTION.
-#example.csv MUST BE RUN THROUGH THE VECTOR RESOLUTION CODE FOR THIS TO WORK.
-#ALTERNATIVELY, YOU CAN PUT THE LINE PLOT - TAKE LINE C CODE OUT OF COMMENTS AND PUT THE OTHERS INTO COMMENTS.
-#FOR THIS CODE TO PLOT THE TRAJECTORY, USE LINE A. FOR THIS, DISPLACEMENT CALCULATIONS NEED TO BE DONE.
-
-# Read data from a CSV file
-file_path = 'C:/Users/qwert/Desktop/example.csv'  # Replace with the path to your CSV file
-df = pd.read_csv(file_path)
-
-# Create a 3D plot
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-
-# Line plot
-ax.plot(df['DisplacementX'], df['DisplacementY'], df['DisplacementZ'], c='r', marker='o') #LINE A - DISPLACEMENT (CODE NEEDS TO BE MADE FOR TO FIND DISPLACEMENT)
-#ax.plot(df['Resolved_X_Acceleration'], df['Resolved_Y_Acceleration'], df['Resolved_Z_Acceleration'], c='r', marker='o') #LINE B - RESOLVED ACCELERATION (MUST RUN THROUGH VECTOR RESOLUTION CODE)
-#ax.plot(df['X_Acceleration'], df['Y_Acceleration'], df['Z_Acceleration'], c='r', marker='o') #LINE C
-
-# Set labels (NOTE: CHECK LABELS ARE CORRECT FOR THE GRAPH YOU ARE PLOTTING)
-ax.set_xlabel('Displacement X (m)')
-ax.set_ylabel('Displacement Y (m)')
-ax.set_zlabel('Displacement Z (m)')
+    #Finds X resolved vector
+    result = (data['X_Acceleration'] * np.cos(data['a1']) - data['Y_Acceleration']*np.sin(data['a1'])) * np.cos(data['a2']) - data['Z_Acceleration']*np.sin(data['a2'])
+    #Creates new column
+    data['Resolved_X_Acceleration'] = result
+    
+    #Finds Y resolved vector
+    result = (data['Y_Acceleration'] * np.cos(data['a1']) - data['X_Acceleration']*np.sin(data['a1'])) * np.cos(data['a3']) - data['Z_Acceleration']*np.sin(data['a3'])
+    #Creates new column
+    data['Resolved_Y_Acceleration'] = result
+    
+    #Finds Z resolved vector
+    result = (data['Z_Acceleration'] * np.cos(data['a2']) - data['X_Acceleration']*np.sin(data['a2'])) * np.cos(data['a3']) - data['Y_Acceleration']*np.sin(data['a3'])
+    #Creates new column
+    data['Resolved_Z_Acceleration'] = result
+    
+    #Prints the table with calculated values
+    print(data)
+    
+    #Saves the modified .csv file in the same location as the code
+    data.to_csv('C:/Users/qwert/Desktop/example.csv', index=False)
+    
+    #VECTOR RESOLUTION ^ --------------------------------------------------------------------------
+    #VELOCITY CALCULATIONS v --------------------------------------------------------------------------
+    #VELOCITY X --------------------------------------------------------------------------
+    def calculate_velocityX(accelerations):
+        velocities = [0]  # Initial velocity is assumed to be 0
+        for accel in accelerations:
+            VelocityX = velocities[-1] + accel
+            velocities.append(VelocityX)
+        return velocities[1:]  # Exclude the initial velocity
+    
+    def main():
+        # Replace 'inputFile.csv' and 'outputFile.csv' with your actual file paths
+        input_file_path = 'C:/Users/qwert/Desktop/example.csv'
+        output_file_path = 'C:/Users/qwert/Desktop/example.csv'
+    
+        # Read accelerations from CSV
+        df = pd.read_csv(input_file_path)
+        accelerations = df['Resolved_X_Acceleration'].tolist()
+    
+        # Calculate velocities
+        velocities = calculate_velocityX(accelerations)
+        
+        # Add a new 'velocity' column to the DataFrame with NaN values
+        df['VelocityX'] = [float('nan')] * len(df)
+        
+        # Fill the first row of the 'velocity' column with 0
+        df.at[0, 'VelocityX'] = 0
+    
+        # Fill the 'velocity' column with calculated velocities starting from the second row
+        df['VelocityX'] = [0] + velocities[:len(df)-1]
+    
+        # Write the updated DataFrame back to CSV
+        df.to_csv(output_file_path, index=False)
+    
+    if __name__ == "__main__":
+        main()
+    #VELOCITY Y --------------------------------------------------------------------------
+    def calculate_velocityY(accelerations):
+        velocities = [0]  # Initial velocity is assumed to be 0
+        for accel in accelerations:
+            VelocityY = velocities[-1] + accel
+            velocities.append(VelocityY)
+        return velocities[1:]  # Exclude the initial velocity
+    
+    def main():
+        # Replace 'inputFile.csv' and 'outputFile.csv' with your actual file paths
+        input_file_path = 'C:/Users/qwert/Desktop/example.csv'
+        output_file_path = 'C:/Users/qwert/Desktop/example.csv'
+    
+        # Read accelerations from CSV
+        df = pd.read_csv(input_file_path)
+        accelerations = df['Resolved_Y_Acceleration'].tolist()
+    
+        # Calculate velocities
+        velocities = calculate_velocityY(accelerations)
+        
+        # Add a new 'velocity' column to the DataFrame with NaN values
+        df['VelocityY'] = [float('nan')] * len(df)
+        
+        # Fill the first row of the 'velocity' column with 0
+        df.at[0, 'VelocityY'] = 0
+    
+        # Fill the 'velocity' column with calculated velocities starting from the second row
+        df['VelocityY'] = [0] + velocities[:len(df)-1]
+    
+        # Write the updated DataFrame back to CSV
+        df.to_csv(output_file_path, index=False)
+    
+    if __name__ == "__main__":
+        main()
+    #VELOCITY Z --------------------------------------------------------------------------
+    def calculate_velocityZ(accelerations):
+        velocities = [0]  # Initial velocity is assumed to be 0
+        for accel in accelerations:
+            VelocityZ = velocities[-1] + accel
+            velocities.append(VelocityZ)
+        return velocities[1:]  # Exclude the initial velocity
+    
+    def main():
+        # Replace 'inputFile.csv' and 'outputFile.csv' with your actual file paths
+        input_file_path = 'C:/Users/qwert/Desktop/example.csv'
+        output_file_path = 'C:/Users/qwert/Desktop/example.csv'
+    
+        # Read accelerations from CSV
+        df = pd.read_csv(input_file_path)
+        accelerations = df['Resolved_Z_Acceleration'].tolist()
+    
+        # Calculate velocities
+        velocities = calculate_velocityZ(accelerations)
+        
+        # Add a new 'velocity' column to the DataFrame with NaN values
+        df['VelocityZ'] = [float('nan')] * len(df)
+        
+        # Fill the first row of the 'velocity' column with 0
+        df.at[0, 'VelocityZ'] = 0
+    
+        # Fill the 'velocity' column with calculated velocities starting from the second row
+        df['VelocityZ'] = [0] + velocities[:len(df)-1]
+    
+        # Write the updated DataFrame back to CSV
+        df.to_csv(output_file_path, index=False)
+    
+    if __name__ == "__main__":
+        main()
+    
+    #VELOCITY CALCULATIONS ^ --------------------------------------------------------------------------
+    #DISPLACEMENT CALCULATIONS v --------------------------------------------------------------------------
+    #DisplacementX --------------------------------------------------------------------------
+    
+    def calculate_displacement(acceleration, velocity, time_interval, previous_displacement):
+        displacement = previous_displacement + velocity * time_interval + 0.5 * acceleration * (time_interval ** 2)
+        return displacement
+    
+    def add_displacement_column(input_csv, output_csv, time_interval):
+        # Read the CSV file into a DataFrame
+        df = pd.read_csv(input_csv)
+    
+        # Initialize the first displacement as the initial value in the 'Displacement' column
+        df['DisplacementX'] = df['VelocityX'] * time_interval + 0.5 * df['Resolved_X_Acceleration'] * (time_interval ** 2)
+    
+        # Calculate and accumulate displacements based on 'Acceleration' and 'Velocity' columns
+        for i in range(1, len(df)):
+            df.loc[i, 'DisplacementX'] = calculate_displacement(df.loc[i, 'Resolved_X_Acceleration'], df.loc[i, 'VelocityX'], time_interval, df.loc[i - 1, 'DisplacementX'])
+    
+        # Save the DataFrame with the new 'Displacement' column to a new CSV file
+        df.to_csv(output_csv, index=False)
+    
+    # Example usage
+    input_csv_file = 'C:/Users/qwert/Desktop/example.csv'  # Replace with actual input CSV file directory
+    output_csv_file = 'C:/Users/qwert/Desktop/example.csv' # Replace with actual output CSV file directory
+    time_interval_seconds = 1  # Replace with the actual time interval in seconds
+    
+    add_displacement_column(input_csv_file, output_csv_file, time_interval_seconds)
+    
+    #DisplacementY --------------------------------------------------------------------------
+    
+    def calculate_displacement(acceleration, velocity, time_interval, previous_displacement):
+        displacement = previous_displacement + velocity * time_interval + 0.5 * acceleration * (time_interval ** 2)
+        return displacement
+    
+    def add_displacement_column(input_csv, output_csv, time_interval):
+        # Read the CSV file into a DataFrame
+        df = pd.read_csv(input_csv)
+    
+        # Initialize the first displacement as the initial value in the 'Displacement' column
+        df['DisplacementY'] = df['VelocityY'] * time_interval + 0.5 * df['Resolved_Y_Acceleration'] * (time_interval ** 2)
+    
+        # Calculate and accumulate displacements based on 'Acceleration' and 'Velocity' columns
+        for i in range(1, len(df)):
+            df.loc[i, 'DisplacementY'] = calculate_displacement(df.loc[i, 'Resolved_Y_Acceleration'], df.loc[i, 'VelocityY'], time_interval, df.loc[i - 1, 'DisplacementY'])
+    
+        # Save the DataFrame with the new 'Displacement' column to a new CSV file
+        df.to_csv(output_csv, index=False)
+    
+    # Example usage
+    input_csv_file = 'C:/Users/qwert/Desktop/example.csv'  # Replace with actual input CSV file directory
+    output_csv_file = 'C:/Users/qwert/Desktop/example.csv' # Replace with actual output CSV file directory
+    time_interval_seconds = 1  # Replace with the actual time interval in seconds
+    
+    add_displacement_column(input_csv_file, output_csv_file, time_interval_seconds)
+    
+    #DisplacementZ --------------------------------------------------------------------------
+    
+    def calculate_displacement(acceleration, velocity, time_interval, previous_displacement):
+        displacement = previous_displacement + velocity * time_interval + 0.5 * acceleration * (time_interval ** 2)
+        return displacement
+    
+    def add_displacement_column(input_csv, output_csv, time_interval):
+        # Read the CSV file into a DataFrame
+        df = pd.read_csv(input_csv)
+    
+        # Initialize the first displacement as the initial value in the 'Displacement' column
+        df['DisplacementZ'] = df['VelocityZ'] * time_interval + 0.5 * df['Resolved_Z_Acceleration'] * (time_interval ** 2)
+    
+        # Calculate and accumulate displacements based on 'Acceleration' and 'Velocity' columns
+        for i in range(1, len(df)):
+            df.loc[i, 'DisplacementZ'] = calculate_displacement(df.loc[i, 'Resolved_Z_Acceleration'], df.loc[i, 'VelocityZ'], time_interval, df.loc[i - 1, 'DisplacementZ'])
+    
+        # Save the DataFrame with the new 'Displacement' column to a new CSV file
+        df.to_csv(output_csv, index=False)
+    
+    # Example usage
+    input_csv_file = 'C:/Users/qwert/Desktop/example.csv'  # Replace with actual input CSV file directory
+    output_csv_file = 'C:/Users/qwert/Desktop/example.csv' # Replace with actual output CSV file directory
+    time_interval_seconds = 1  # Replace with the actual time interval in seconds
+    
+    add_displacement_column(input_csv_file, output_csv_file, time_interval_seconds)
+    
+    #DISPLACEMENT CALCULATIONS ^ --------------------------------------------------------------------------
+    #2D GRAPH CODE v --------------------------------------------------------------------------
+    
+    #table_1 = pd.read_csv(r'C:/Users/username/Desktop/example.csv')
+    table_1 = pd.read_csv(r'C:/Users/qwert/Desktop/example.csv')
+    
+    # Get the headers
+    print(table_1.head())
+    
+    # Convert values to numpy arrays to graph
+    x = table_1['Time'].to_numpy()
+    y = table_1['Resolved_X_Acceleration'].to_numpy()
+    # Graph dimensions
+    xmin = x.min()
+    xmax = x.max()
+    ymin = y.min() - 5
+    ymax = y.max() + 5
+    
+    fig, ax = plt.subplots()
+    plt.axis([xmin,xmax,ymin,ymax]) # window size
+    plt.plot([xmin,xmax],[0,0],'b') # blue x axis
+    plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
+    plt.plot(x,y) # make it scatterplot or line graph. (x,y,ro) for scattergraph
+    
+    y = table_1['Resolved_Y_Acceleration'].to_numpy()
+    
+    xmin = x.min()
+    xmax = x.max()
+    ymin = y.min() - 5
+    ymax = y.max() + 5
+    
+    fig, ax = plt.subplots()
+    plt.axis([xmin,xmax,ymin,ymax]) # window size
+    plt.plot([xmin,xmax],[0,0],'b') # blue x axis
+    plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
+    plt.plot(x,y,color='red') # make it scatterplot or line graph. (x,y,ro) for scattergraph
+    
+    y = table_1['Resolved_Y_Acceleration'].to_numpy()
+    
+    xmin = x.min()
+    xmax = x.max()
+    ymin = y.min() - 5
+    ymax = y.max() + 5
+    
+    fig, ax = plt.subplots()
+    plt.axis([xmin,xmax,ymin,ymax]) # window size
+    plt.plot([xmin,xmax],[0,0],'b') # blue x axis
+    plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
+    plt.plot(x,y,color='green') # make it scatterplot or line graph. (x,y,ro) for scattergraph
+    
+    y = table_1['VelocityX'].to_numpy()
+    
+    xmin = x.min()
+    xmax = x.max()
+    ymin = y.min() - 5
+    ymax = y.max() + 5
+    
+    fig, ax = plt.subplots()
+    plt.axis([xmin,xmax,ymin,ymax]) # window size
+    plt.plot([xmin,xmax],[0,0],'b') # blue x axis
+    plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
+    plt.plot(x,y,color='darkred') # make it scatterplot or line graph. (x,y,ro) for scattergraph
+    
+    y = table_1['VelocityY'].to_numpy()
+    
+    xmin = x.min()
+    xmax = x.max()
+    ymin = y.min() - 5
+    ymax = y.max() + 5
+    
+    fig, ax = plt.subplots()
+    plt.axis([xmin,xmax,ymin,ymax]) # window size
+    plt.plot([xmin,xmax],[0,0],'b') # blue x axis
+    plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
+    plt.plot(x,y,color='darkblue') # make it scatterplot or line graph. (x,y,ro) for scattergraph
+    
+    y = table_1['VelocityZ'].to_numpy()
+    
+    xmin = x.min()
+    xmax = x.max()
+    ymin = y.min() - 5
+    ymax = y.max() + 5
+    
+    fig, ax = plt.subplots()
+    plt.axis([xmin,xmax,ymin,ymax]) # window size
+    plt.plot([xmin,xmax],[0,0],'b') # blue x axis
+    plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
+    plt.plot(x,y,color='darkgreen') # make it scatterplot or line graph. (x,y,ro) for scattergraph
+    
+    y = table_1['DisplacementX'].to_numpy()
+    
+    xmin = x.min()
+    xmax = x.max()
+    ymin = y.min() - 5
+    ymax = y.max() + 5
+    
+    fig, ax = plt.subplots()
+    plt.axis([xmin,xmax,ymin,ymax]) # window size
+    plt.plot([xmin,xmax],[0,0],'b') # blue x axis
+    plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
+    plt.plot(x,y,color='lightcoral') # make it scatterplot or line graph. (x,y,ro) for scattergraph
+    
+    y = table_1['DisplacementY'].to_numpy()
+    
+    xmin = x.min()
+    xmax = x.max()
+    ymin = y.min() - 5
+    ymax = y.max() + 5
+    
+    fig, ax = plt.subplots()
+    plt.axis([xmin,xmax,ymin,ymax]) # window size
+    plt.plot([xmin,xmax],[0,0],'b') # blue x axis
+    plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
+    plt.plot(x,y,color='lightseagreen') # make it scatterplot or line graph. (x,y,ro) for scattergraph
+    
+    y = table_1['DisplacementZ'].to_numpy()
+    
+    xmin = x.min()
+    xmax = x.max()
+    ymin = y.min() - 5
+    ymax = y.max() + 5
+    
+    fig, ax = plt.subplots()
+    plt.axis([xmin,xmax,ymin,ymax]) # window size
+    plt.plot([xmin,xmax],[0,0],'b') # blue x axis
+    plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
+    plt.plot(x,y,color='darkviolet') # make it scatterplot or line graph. (x,y,ro) for scattergraph
+    
+    plt.show()
+    
+    #2D GRAPH CODE ^ --------------------------------------------------------------------------
+    #3D GRAPH CODE v --------------------------------------------------------------------------
+    
+    #This code creates a 3D graph.
+    
+    #NOTE: THIS CODE USES THE RESOLVED ACCELERATIONS BY DEFAULT; SEE THE LINE PLOT SECTION.
+    #example.csv MUST BE RUN THROUGH THE VECTOR RESOLUTION CODE FOR THIS TO WORK.
+    #ALTERNATIVELY, YOU CAN PUT THE LINE PLOT - TAKE LINE C CODE OUT OF COMMENTS AND PUT THE OTHERS INTO COMMENTS.
+    #FOR THIS CODE TO PLOT THE TRAJECTORY, USE LINE A. FOR THIS, DISPLACEMENT CALCULATIONS NEED TO BE DONE.
+    
+    # Read data from a CSV file
+    file_path = 'C:/Users/qwert/Desktop/example.csv'  # Replace with the path to your CSV file
+    df = pd.read_csv(file_path)
+    
+    # Create a 3D plot
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    
+    # Line plot
+    ax.plot(df['DisplacementX'], df['DisplacementY'], df['DisplacementZ'], c='r', marker='o') #LINE A - DISPLACEMENT (CODE NEEDS TO BE MADE FOR TO FIND DISPLACEMENT)
+    #ax.plot(df['Resolved_X_Acceleration'], df['Resolved_Y_Acceleration'], df['Resolved_Z_Acceleration'], c='r', marker='o') #LINE B - RESOLVED ACCELERATION (MUST RUN THROUGH VECTOR RESOLUTION CODE)
+    #ax.plot(df['X_Acceleration'], df['Y_Acceleration'], df['Z_Acceleration'], c='r', marker='o') #LINE C
+    
+    # Set labels (NOTE: CHECK LABELS ARE CORRECT FOR THE GRAPH YOU ARE PLOTTING)
+    ax.set_xlabel('Displacement X (m)')
+    ax.set_ylabel('Displacement Y (m)')
+    ax.set_zlabel('Displacement Z (m)')
 
 # Show the plot
 plt.show()
