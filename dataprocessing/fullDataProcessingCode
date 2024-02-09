@@ -368,6 +368,34 @@ def graphCode():
     plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
     plt.plot(x,y,color='darkviolet') # make it scatterplot or line graph. (x,y,ro) for scattergraph
     
+    x = table_1['altitude'].to_numpy()
+    y = table_1['pressure'].to_numpy()
+    
+    xmin = x.min()
+    xmax = x.max()
+    ymin = y.min() - 5
+    ymax = y.max() + 5
+    
+    fig, ax = plt.subplots()
+    plt.axis([xmin,xmax,ymin,ymax]) # window size
+    plt.plot([xmin,xmax],[0,0],'b') # blue x axis
+    plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
+    plt.plot(x,y,color='cadetblue') # make it scatterplot or line graph. (x,y,ro) for scattergraph
+    
+    x = table_1['altitude'].to_numpy()
+    y = table_1['temperature'].to_numpy()
+    
+    xmin = x.min()
+    xmax = x.max()
+    ymin = y.min() - 5
+    ymax = y.max() + 5
+    
+    fig, ax = plt.subplots()
+    plt.axis([xmin,xmax,ymin,ymax]) # window size
+    plt.plot([xmin,xmax],[0,0],'b') # blue x axis
+    plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
+    plt.plot(x,y,color='olive') # make it scatterplot or line graph. (x,y,ro) for scattergraph
+    
     plt.show()
     
     #2D GRAPH CODE ^ --------------------------------------------------------------------------
@@ -398,5 +426,5 @@ def graphCode():
     ax.set_ylabel('Displacement Y (m)')
     ax.set_zlabel('Displacement Z (m)')
 
-# Show the plot
-plt.show()
+    # Show the plot
+    plt.show()
