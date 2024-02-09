@@ -368,8 +368,8 @@ def graphCode():
     plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
     plt.plot(x,y,color='darkviolet') # make it scatterplot or line graph. (x,y,ro) for scattergraph
     
-    x = table_1['altitude'].to_numpy()
-    y = table_1['pressure'].to_numpy()
+    x = table_1['time'].to_numpy()
+    y = table_1['altitude'].to_numpy()
     
     xmin = x.min()
     xmax = x.max()
@@ -382,8 +382,8 @@ def graphCode():
     plt.plot([0,0],[ymin,ymax], 'b') # blue y axis
     plt.plot(x,y,color='cadetblue') # make it scatterplot or line graph. (x,y,ro) for scattergraph
     
-    x = table_1['altitude'].to_numpy()
-    y = table_1['temperature'].to_numpy()
+    x = table_1['temperature'].to_numpy()
+    y = table_1['altitude'].to_numpy()
     
     xmin = x.min()
     xmax = x.max()
