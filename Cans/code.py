@@ -1,4 +1,4 @@
-#importing libraries and files
+ #importing libraries and files
 
 import digitalio
 import board
@@ -6,6 +6,9 @@ import time
 import bmp280
 import radio
 import tmp36
+import bno055
+
+
 
 #to validate that the code is running correctly
 print("Program Running.")
@@ -31,14 +34,12 @@ while True:
     temperature = bmp280.read_temperature()
     pressure = bmp280.read_pressure()
     adc_temp = tmp36.read_temperature()
-
+    data = bno055.read_sensor_data()
     time_count += 1
+    stringy = "CANMOTION T:{:.2f} P: {:.0f} ADC:{:5.2f}/ x:{:.2f} y:{:.2f} z:{:.2f}/ r:{:.2f} p:{:.2f} y:{:.2f}/A x:{:.2f} y:{:.2f} z:{:.2f}".format(temperature, pressure, adc_temp,data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7],data[8] )
+    print(str(time_count), stringy)
 
-    print(str(time_count),
-          "CANMOTION T:{:.2f} P: {:.0f} ADC:{:5.2f}".format(temperature, pressure, adc_temp))
-
-    radio.send(str(time_count) +
-               "CANMOTION T:{:.2f} P: {:.0f} ADC:{:5.2f}".format(temperature, pressure, adc_temp))
+    radio.send(str(time_count) + stringy)
 
     time.sleep(1)   # TODO - look at cansat spec and see if it needs changed
 
