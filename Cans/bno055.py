@@ -4,8 +4,8 @@ import time
 import adafruit_bno055
 
 # Initialize I2C bus and BNO055 sensor
-i2c = busio.I2C(board.SCL, board.SDA)
-sensor = adafruit_bno055.BNO055(i2c)
+i2c = busio.I2C(scl=board.GP1, sda=board.GP0)
+sensor = adafruit_bno055.BNO055_I2C(i2c)
 
 last_val = 0xFFFF
 
@@ -17,20 +17,17 @@ def read_sensor_data():
     temp_celsius = sensor.temperature
     mag_x, mag_y, mag_z = sensor.magnetic
 
-    # Return data as dict
-    return {
-        "acceleration": {"x": accel_x, "y": accel_y, "z": accel_z},
-        "gyroscope": {"x": gyro_x, "y": gyro_y, "z": gyro_z},
-        "euler": {"roll": euler_x, "pitch": euler_y, "yaw": euler_z},
-        "temperature": temp_celsius,
-        "magnetic": {"x": mag_x, "y": mag_y, "z": mag_z}
-    }
+    # Return data as array
+    return [gyro_x,gyro_y,gyro_z,euler_x,euler_y,euler_z]   #roll pitch yaw
+        #"A": {"x": accel_x, "y": accel_y, "z": accel_z},    #acceleration
+        #"gyroscope": {"x": gyro_x, "y": gyro_y, "z": gyro_z},   #gyroscope
+        #"euler": {"r": euler_x, "p": euler_y, "y": euler_z}, #euler absolute orientation, roll pitch yaw}
 
 def read_and_return_sensor_data():
     try:
         while True:
             sensor_data = read_sensor_data()
-            print("Sensor Data:", sensor_data) # For testing
+            print("CANMOTION:", sensor_data) # For testing
             time.sleep(1)  # Delay before next reading
             return sensor_data # Returns data
     # Exception handling
