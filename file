@@ -1,0 +1,3 @@
+LowestDataFile = open('pupil with lowest score.csv', 'w') #prepares to add data to the file 
+LowestDataFile.write(pupil_with_lowest_score+","+str(lowest)+"\n")  #(they are written to a new file)
+LowestDataFile.close()  #this line closes the file 
